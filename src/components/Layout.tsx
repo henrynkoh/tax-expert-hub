@@ -19,6 +19,7 @@ import {
   ListItemText,
   useTheme,
   useMediaQuery,
+  ListItemButton,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -73,16 +74,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     <Box sx={{ width: 250 }}>
       <List>
         {menuItems.map((item) => (
-          <ListItem
-            button
-            key={item.text}
-            onClick={() => {
-              navigate(item.path);
-              setMobileOpen(false);
-            }}
-          >
-            <ListItemIcon>{item.icon}</ListItemIcon>
-            <ListItemText primary={item.text} />
+          <ListItem disablePadding key={item.text}>
+            <ListItemButton
+              onClick={() => {
+                navigate(item.path);
+                setMobileOpen(false);
+              }}
+            >
+              <ListItemIcon>{item.icon}</ListItemIcon>
+              <ListItemText primary={item.text} />
+            </ListItemButton>
           </ListItem>
         ))}
       </List>

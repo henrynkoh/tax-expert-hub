@@ -127,144 +127,140 @@ const Dashboard: React.FC = () => {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Grid container spacing={3} component="div">
-        <Grid item xs={12} component="div">
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-            <Typography variant="h4" component="h1">
-              Dashboard
+      <Box sx={{ mb: 3 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Typography variant="h4" component="h1">
+            Dashboard
+          </Typography>
+          {user?.role === 'seeker' && (
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={() => navigate('/service-request/new')}
+            >
+              New Request
+            </Button>
+          )}
+        </Box>
+      </Box>
+
+      {error && (
+        <Box sx={{ mb: 2 }}>
+          <Alert severity="error">{error}</Alert>
+        </Box>
+      )}
+
+      <Card>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Tabs value={tabValue} onChange={handleTabChange}>
+            <Tab label="Open" />
+            <Tab label="In Progress" />
+            <Tab label="Completed" />
+          </Tabs>
+        </Box>
+
+        <TabPanel value={tabValue} index={0}>
+          {filteredRequests.length === 0 ? (
+            <Typography variant="body1" color="text.secondary" align="center">
+              No open requests found.
             </Typography>
-            {user?.role === 'seeker' && (
-              <Button
-                variant="contained"
-                startIcon={<AddIcon />}
-                onClick={() => navigate('/service-request/new')}
-              >
-                New Request
-              </Button>
-            )}
-          </Box>
-        </Grid>
-
-        {error && (
-          <Grid item xs={12} component="div">
-            <Alert severity="error">{error}</Alert>
-          </Grid>
-        )}
-
-        <Grid item xs={12} component="div">
-          <Card>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-              <Tabs value={tabValue} onChange={handleTabChange}>
-                <Tab label="Open" />
-                <Tab label="In Progress" />
-                <Tab label="Completed" />
-              </Tabs>
+          ) : (
+            <Box sx={{ display: 'grid', gap: 2 }}>
+              {filteredRequests.map((request: ServiceRequest) => (
+                <Card key={request.id}>
+                  <CardContent>
+                    <Typography variant="h6" gutterBottom>
+                      {request.title}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" paragraph>
+                      {request.description}
+                    </Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Typography variant="body2" color="text.secondary">
+                        Budget: ${request.budget.min} - ${request.budget.max}
+                      </Typography>
+                      <Button
+                        variant="outlined"
+                        onClick={() => navigate(`/service-request/${request.id}`)}
+                      >
+                        View Details
+                      </Button>
+                    </Box>
+                  </CardContent>
+                </Card>
+              ))}
             </Box>
+          )}
+        </TabPanel>
 
-            <TabPanel value={tabValue} index={0}>
-              {filteredRequests.length === 0 ? (
-                <Typography variant="body1" color="text.secondary" align="center">
-                  No open requests found.
-                </Typography>
-              ) : (
-                <Box sx={{ display: 'grid', gap: 2 }}>
-                  {filteredRequests.map((request: ServiceRequest) => (
-                    <Card key={request.id}>
-                      <CardContent>
-                        <Typography variant="h6" gutterBottom>
-                          {request.title}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" paragraph>
-                          {request.description}
-                        </Typography>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <Typography variant="body2" color="text.secondary">
-                            Budget: ${request.budget.min} - ${request.budget.max}
-                          </Typography>
-                          <Button
-                            variant="outlined"
-                            onClick={() => navigate(`/service-request/${request.id}`)}
-                          >
-                            View Details
-                          </Button>
-                        </Box>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </Box>
-              )}
-            </TabPanel>
+        <TabPanel value={tabValue} index={1}>
+          {filteredRequests.length === 0 ? (
+            <Typography variant="body1" color="text.secondary" align="center">
+              No in-progress requests found.
+            </Typography>
+          ) : (
+            <Box sx={{ display: 'grid', gap: 2 }}>
+              {filteredRequests.map((request: ServiceRequest) => (
+                <Card key={request.id}>
+                  <CardContent>
+                    <Typography variant="h6" gutterBottom>
+                      {request.title}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" paragraph>
+                      {request.description}
+                    </Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Typography variant="body2" color="text.secondary">
+                        Budget: ${request.budget.min} - ${request.budget.max}
+                      </Typography>
+                      <Button
+                        variant="outlined"
+                        onClick={() => navigate(`/service-request/${request.id}`)}
+                      >
+                        View Details
+                      </Button>
+                    </Box>
+                  </CardContent>
+                </Card>
+              ))}
+            </Box>
+          )}
+        </TabPanel>
 
-            <TabPanel value={tabValue} index={1}>
-              {filteredRequests.length === 0 ? (
-                <Typography variant="body1" color="text.secondary" align="center">
-                  No in-progress requests found.
-                </Typography>
-              ) : (
-                <Box sx={{ display: 'grid', gap: 2 }}>
-                  {filteredRequests.map((request: ServiceRequest) => (
-                    <Card key={request.id}>
-                      <CardContent>
-                        <Typography variant="h6" gutterBottom>
-                          {request.title}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" paragraph>
-                          {request.description}
-                        </Typography>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <Typography variant="body2" color="text.secondary">
-                            Budget: ${request.budget.min} - ${request.budget.max}
-                          </Typography>
-                          <Button
-                            variant="outlined"
-                            onClick={() => navigate(`/service-request/${request.id}`)}
-                          >
-                            View Details
-                          </Button>
-                        </Box>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </Box>
-              )}
-            </TabPanel>
-
-            <TabPanel value={tabValue} index={2}>
-              {filteredRequests.length === 0 ? (
-                <Typography variant="body1" color="text.secondary" align="center">
-                  No completed requests found.
-                </Typography>
-              ) : (
-                <Box sx={{ display: 'grid', gap: 2 }}>
-                  {filteredRequests.map((request: ServiceRequest) => (
-                    <Card key={request.id}>
-                      <CardContent>
-                        <Typography variant="h6" gutterBottom>
-                          {request.title}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" paragraph>
-                          {request.description}
-                        </Typography>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <Typography variant="body2" color="text.secondary">
-                            Budget: ${request.budget.min} - ${request.budget.max}
-                          </Typography>
-                          <Button
-                            variant="outlined"
-                            onClick={() => navigate(`/service-request/${request.id}`)}
-                          >
-                            View Details
-                          </Button>
-                        </Box>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </Box>
-              )}
-            </TabPanel>
-          </Card>
-        </Grid>
-      </Grid>
+        <TabPanel value={tabValue} index={2}>
+          {filteredRequests.length === 0 ? (
+            <Typography variant="body1" color="text.secondary" align="center">
+              No completed requests found.
+            </Typography>
+          ) : (
+            <Box sx={{ display: 'grid', gap: 2 }}>
+              {filteredRequests.map((request: ServiceRequest) => (
+                <Card key={request.id}>
+                  <CardContent>
+                    <Typography variant="h6" gutterBottom>
+                      {request.title}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" paragraph>
+                      {request.description}
+                    </Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Typography variant="body2" color="text.secondary">
+                        Budget: ${request.budget.min} - ${request.budget.max}
+                      </Typography>
+                      <Button
+                        variant="outlined"
+                        onClick={() => navigate(`/service-request/${request.id}`)}
+                      >
+                        View Details
+                      </Button>
+                    </Box>
+                  </CardContent>
+                </Card>
+              ))}
+            </Box>
+          )}
+        </TabPanel>
+      </Card>
     </Container>
   );
 };

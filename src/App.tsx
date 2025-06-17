@@ -10,10 +10,11 @@ import Layout from './components/Layout';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
-import ServiceRequest from './pages/ServiceRequest';
 import Chat from './pages/Chat';
-import Profile from './pages/Profile';
+import Dashboard from './pages/Dashboard';
+import ServiceRequestForm from './pages/ServiceRequestForm';
+import ServiceRequestDetails from './pages/ServiceRequestDetails';
+// import Profile from './pages/Profile';
 
 // Create theme
 const theme = createTheme({
@@ -50,26 +51,47 @@ const theme = createTheme({
   },
 });
 
+class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean; error: any }> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error: any) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error: any, errorInfo: any) {
+    // You can log error info here if needed
+  }
+  render() {
+    if (this.state.hasError) {
+      return <div style={{ color: 'red', padding: 32 }}><h2>Something went wrong.</h2><pre>{String(this.state.error)}</pre></div>;
+    }
+    return this.props.children;
+  }
+}
+
 function App() {
   return (
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Router>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/service-request/:id" element={<ServiceRequest />} />
-              <Route path="/chat" element={<Chat />} />
-              <Route path="/profile" element={<Profile />} />
-            </Routes>
-          </Layout>
-        </Router>
-      </ThemeProvider>
-    </Provider>
+    <ErrorBoundary>
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Router>
+            <Layout>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/chat" element={<Chat />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/service-request/new" element={<ServiceRequestForm />} />
+                <Route path="/service-request/:id" element={<ServiceRequestDetails />} />
+              </Routes>
+            </Layout>
+          </Router>
+        </ThemeProvider>
+      </Provider>
+    </ErrorBoundary>
   );
 }
 
